@@ -1,37 +1,21 @@
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 class KindergartenGarden {
-    List<Plant> firstRow;
-    List<Plant> secondRow;
 
-    enum Children {
-        Alice, Bob, Charlie, David,
-        Eve, Fred, Ginny, Harriet,
-        Ileana, Joseph, Kincaid, Larry
-    }
+    private final String garden;
 
     KindergartenGarden(String garden) {
-        firstRow = new ArrayList<>();
-        secondRow = new ArrayList<>();
-
-        var splitGarden = garden.split("\n");
-        splitGarden[0].chars().forEach(n ->
-                this.firstRow.add(Plant.getPlant((char) n))
-        );
-        splitGarden[1].chars().forEach(n ->
-                this.secondRow.add(Plant.getPlant((char) n))
-        );
+        this.garden = garden;
     }
 
     List<Plant> getPlantsOfStudent(String student) {
-        int cup = Children.valueOf(student).ordinal() * 2;
-        List<Plant> plants = new ArrayList<>();
-        plants.add(firstRow.get(cup));
-        plants.add(firstRow.get(cup + 1));
-        plants.add(secondRow.get(cup));
-        plants.add(secondRow.get(cup + 1));
-        return plants;
+        final int index = 2 * (student.charAt(0) - 'A');
+
+        return garden.lines()
+                .flatMap(s -> Stream.of(Plant.getPlant(s.charAt(index)), Plant.getPlant(s.charAt(index + 1))))
+                .collect(Collectors.toList());
     }
 
 }
